@@ -6,14 +6,17 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './../users/schema/user.schema';
+import { Admin, AdminDocument } from './../admin/schema/admin.schema';
 import { Model } from 'mongoose';
 import * as argon from 'argon2';
 import { JwtService } from '@nestjs/jwt';
+import { Request } from 'express';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
+    @InjectModel(Admin.name) private readonly adminModel: Model<AdminDocument>,
     private jwtService: JwtService,
   ) {}
 
@@ -32,6 +35,7 @@ export class AuthService {
 
   async sendUserWithToken(user: any) {
     const payload = { username: user.email, sub: user._id };
+    delete user.password;
     return {
       access_token: this.jwtService.sign(payload),
       data: user,
@@ -49,14 +53,17 @@ export class AuthService {
     // Hash users password
     const hash = await argon.hash(password);
 
-    console.log(typeof hash);
-
     // Save user
     const user = await this.userModel.create<RegisterDTO>({
       ...rest,
       email,
       password: hash,
     });
+
+    if (user) {
+      delete user.password;
+      return user;
+    }
 
     return user;
   }
