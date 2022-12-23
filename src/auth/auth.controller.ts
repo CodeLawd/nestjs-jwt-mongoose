@@ -23,7 +23,6 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Req() req: Request) {
-    const user = await this.authService.sendUserWithToken(req.user);
-    return user;
+    return await this.authService.sendUserWithToken(req.user);
   }
 }
