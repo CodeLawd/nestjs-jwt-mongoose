@@ -1,11 +1,19 @@
 import {
   IsEmail,
+  IsEnum,
   IsNotEmpty,
+  IsOptional,
   IsPhoneNumber,
   IsString,
   IsStrongPassword,
   MinLength,
 } from 'class-validator';
+
+export enum Role {
+  User = 'user',
+  Admin = 'admin',
+  SuperAdmin = 'superadmin',
+}
 
 export class RegisterDTO {
   @IsEmail()
@@ -28,4 +36,8 @@ export class RegisterDTO {
   @IsPhoneNumber()
   @IsNotEmpty()
   phone: string;
+
+  @IsEnum(Role)
+  @IsOptional()
+  roles: Role[];
 }

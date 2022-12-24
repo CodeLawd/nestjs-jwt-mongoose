@@ -1,3 +1,4 @@
+import { RolesGuard } from './../common/utils/roles.guard';
 import { Global, Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -19,7 +20,11 @@ import { UsersService } from './users.service';
     UsersService,
     {
       provide: APP_GUARD,
-      useClass: JwtAuthGuard,
+      useClass: JwtAuthGuard
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard
     },
   ],
 })

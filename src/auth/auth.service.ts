@@ -10,7 +10,6 @@ import { Admin, AdminDocument } from './../admin/schema/admin.schema';
 import { Model } from 'mongoose';
 import * as argon from 'argon2';
 import { JwtService } from '@nestjs/jwt';
-import { Request } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -34,8 +33,8 @@ export class AuthService {
   }
 
   async sendUserWithToken(user: any) {
-    const payload = { username: user.email, sub: user._id };
-    delete user.password;
+    const payload = { username: user.email, sub: user._id, roles: user.roles };
+
     return {
       access_token: this.jwtService.sign(payload),
       data: user,
