@@ -7,11 +7,11 @@ import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    MongooseModule.forRoot(process.env.MONGODB_URL),
     UsersModule,
     AuthModule,
     AdminModule,
-    MongooseModule.forRoot('mongodb://localhost:27017/sampleDB'),
-    ConfigModule.forRoot({ isGlobal: true, cache: true }),
   ],
 })
 export class AppModule {}
